@@ -58,6 +58,7 @@ class CNN_FP:
         self.y_pre_test=None #classes to save as compelx np arrays (n-Dim)
 
     def read_data(self, data_paths):
+        
         for data_path in data_paths:
             labels = ['PNEUMONIA', 'NORMAL']
             images = []
@@ -72,6 +73,7 @@ class CNN_FP:
                             images.append([image, label])
                     
         images = np.asarray(images)
+        
         return images
 
     def set_train(self):
@@ -85,6 +87,8 @@ class CNN_FP:
 
         self.train_df = pd.DataFrame(self.train, columns=['image', 'label'])
         self.test_df = pd.DataFrame(self.test, columns = ['image', 'label'])
+        
+        pass
 
     def explore_plot(self): #explore 
 
@@ -103,7 +107,7 @@ class CNN_FP:
 
         pass
 
-    def Show_example_image(self):
+    def show_example_image(self):
 
         fig = plt.figure(figsize = (16, 16))
         for idx in range(15):
@@ -118,11 +122,13 @@ class CNN_FP:
         pass
 
     def splitdata(self, data):#data prep 
+        
         X = []
         y = []
         for i, (val, label) in enumerate(data):
             X.append(val)
             y.append(self.lung_condition(label))
+            
         return np.array(X), np.array(y)
 
     def call_splitdata(self):
@@ -133,8 +139,10 @@ class CNN_FP:
         pass
 
     def preprocesing_to_cnn(self, data):
+        
         data1 = color.rgb2gray(data).reshape(-1, self.img_size, self.img_size, 1).astype('float32')
         data1 /= 255
+        
         return data1
 
     def call_pptocnn(self):
@@ -148,20 +156,26 @@ class CNN_FP:
         self.num_classes = self.y_train.shape[1]
 
         self.input_shape = (self.img_size, self.img_size, 1)
+        
+        pass
 
     def make_callbacks(self):
 
         self.callbacks1 = [EarlyStopping(monitor = 'loss', patience = 6), ReduceLROnPlateau(monitor = 'loss', patience = 3), ModelCheckpoint('models/model.best1.hdf5',monitor='loss', save_best_only=True)]
         self.callbacks3 = [EarlyStopping(monitor = 'loss', patience = 6), ReduceLROnPlateau(monitor = 'loss', patience = 3), ModelCheckpoint('models/model.best3.hdf5', monitor='loss' , save_best_only=True)]
-        self.callbacks2 = [ EarlyStopping(monitor = 'loss', patience = 6), ReduceLROnPlateau(monitor = 'loss', patience = 3),  ModelCheckpoint('models/model.best2.hdf5', monitor='loss' , save_best_only=True)]
+        self.callbacks2 = [EarlyStopping(monitor = 'loss', patience = 6), ReduceLROnPlateau(monitor = 'loss', patience = 3),  ModelCheckpoint('models/model.best2.hdf5', monitor='loss' , save_best_only=True)]
         self.callbacks4 = [EarlyStopping(monitor = 'loss', patience = 7), ReduceLROnPlateau(monitor = 'loss', patience = 4), ModelCheckpoint('models/model.best4.hdf5', monitor='loss' , save_best_only=True)]
-
+        
         pass
 
     def lung_condition(self, label): #pre-proc
+        
         if label == 'NORMAL':
+            
             return 0
+        
         else:
+            
             return 1
 
     def set_preproc(self):
@@ -170,8 +184,11 @@ class CNN_FP:
         np.random.shuffle(self.test)
         self.X_train, self.y_train = self.splitdata(self.train) #overwrites 
         self.X_test, self.y_test = self.splitdata(self.test)
+        
+        pass
 
     def preprocesing_to_mlp(self, data):
+        
         data1 = color.rgb2gray(data).reshape(-1, self.img_size * self.img_size).astype('float32')
         
         data1 /= 255 # Data Normalization [0, 1]
@@ -266,7 +283,6 @@ class CNN_FP:
 
         model = self.get_modelcnn()
         model.compile(loss='categorical_crossentropy', optimizer='Adam', metrics=['accuracy'])
-        print(model.summary())      
 
         learning_history = model.fit(self.X_train, self.y_train, batch_size = 64, epochs = 100, verbose = 1, callbacks = self.callbacks3, validation_data = (self.X_test, self.y_test))
 
@@ -312,15 +328,19 @@ class CNN_FP:
         pass
 
     def show_condition(self, num):
+        
         if num == 0:
+            
             return 'NORMAL'
+        
         return 'PNEUMONIA'
 
     def final_classification(self):
 
         cnt_error = []
         for idx, (a, b) in enumerate(zip(self.y_pre_test, self.y_pred)):
-            if a == b: continue
+            if a == b: 
+                continue
             cnt_error.append(a)# test
 
         cnt_error = np.unique(cnt_error, return_counts = True)
@@ -335,8 +355,10 @@ class CNN_FP:
         fig = plt.figure(figsize=(14, 14))
         X_test_plot = self.X_test.reshape(-1, self.img_size, self.img_size)
         for idx, (a, b) in enumerate(zip(self.y_pre_test, self.y_pred)):
-            if(cnt_ind > 16):break
-            if a == b: continue
+            if(cnt_ind > 16):
+                break
+            if a == b: 
+                continue
             plt.subplot(4, 4, cnt_ind)
             plt.imshow(X_test_plot[idx], cmap='gray', interpolation='none')
             plt.title('y_true = {0}\ny_pred = {1}\n ind = {2}'.format(self.show_condition(a), self.show_condition(b), idx))
@@ -380,3 +402,5 @@ if __name__=="__main__":
     cfp.run_sequence_model2()
     cfp.run_sequence_model3()
     cfp.run_sequence_model4()
+
+    
