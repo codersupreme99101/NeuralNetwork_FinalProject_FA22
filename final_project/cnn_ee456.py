@@ -60,15 +60,19 @@ class CNN_FP:
     def read_data(self, data_paths):
         
         for data_path in data_paths:
+            
             labels = ['PNEUMONIA', 'NORMAL']
             images = []
             y = []
+            
             for label in labels:
                 curr_path = data_path + label
                 for img in os.listdir(curr_path):
                     if ('DS' not in img):
+                        
                         image_path = os.path.join(curr_path, img)
                         image =  cv2.resize(cv2.imread(image_path), (self.img_size, self.img_size))
+                        
                         if image is not None:
                             images.append([image, label])
                     
@@ -82,6 +86,7 @@ class CNN_FP:
         self.test = self.read_data([self.val_path, self.test_path])
 
         for i in range(10):
+            
             np.random.shuffle(self.train)
             np.random.shuffle(self.test)
 
@@ -110,7 +115,9 @@ class CNN_FP:
     def show_example_image(self):
 
         fig = plt.figure(figsize = (16, 16))
+        
         for idx in range(15):
+            
             plt.subplot(5, 5, idx+1)
             plt.imshow(self.train_df.iloc[idx]['image'])
             plt.title("{}".format(self.train_df.iloc[idx]['label']))
@@ -125,7 +132,9 @@ class CNN_FP:
         
         X = []
         y = []
+        
         for i, (val, label) in enumerate(data):
+            
             X.append(val)
             y.append(self.lung_condition(label))
             
@@ -141,7 +150,7 @@ class CNN_FP:
     def preprocesing_to_cnn(self, data):
         
         data1 = color.rgb2gray(data).reshape(-1, self.img_size, self.img_size, 1).astype('float32')
-        data1 /= 255
+        data1/=255
         
         return data1
 
@@ -171,11 +180,9 @@ class CNN_FP:
     def lung_condition(self, label): #pre-proc
         
         if label == 'NORMAL':
-            
             return 0
         
         else:
-            
             return 1
 
     def set_preproc(self):
@@ -205,7 +212,9 @@ class CNN_FP:
     def draw_learning_curve(self, history, keys=['accuracy', 'loss']):
 
         plt.figure(figsize=(20,8))
+        
         for i, key in enumerate(keys):
+            
             plt.subplot(1, 2, i + 1)
             sns.lineplot(x = history.epoch, y = history.history[key])
             sns.lineplot(x = history.epoch, y = history.history['val_' + key])
@@ -330,7 +339,6 @@ class CNN_FP:
     def show_condition(self, num):
         
         if num == 0:
-            
             return 'NORMAL'
         
         return 'PNEUMONIA'
@@ -354,11 +362,15 @@ class CNN_FP:
         list_idx = []
         fig = plt.figure(figsize=(14, 14))
         X_test_plot = self.X_test.reshape(-1, self.img_size, self.img_size)
+        
         for idx, (a, b) in enumerate(zip(self.y_pre_test, self.y_pred)):
+            
             if(cnt_ind > 16):
                 break
+            
             if a == b: 
                 continue
+            
             plt.subplot(4, 4, cnt_ind)
             plt.imshow(X_test_plot[idx], cmap='gray', interpolation='none')
             plt.title('y_true = {0}\ny_pred = {1}\n ind = {2}'.format(self.show_condition(a), self.show_condition(b), idx))
@@ -372,28 +384,57 @@ class CNN_FP:
 
     def run_sequence_model1(self): #model 1 normal mlp
 
-        ##code
+        self.set_train()
+        self.explore_plot()
+        self.show_example_image()
+        self.set_preproc()
+        self.call_splitdata()
+        self.mlp_tt()
+        self.call_pptocnn()
+        
+        self.make_callbacks()
+        self.eval_model1()
 
         pass
 
     def run_sequence_model2(self): #model 2 normal mlp
     
-        ##code
+        self.set_train()
+        self.explore_plot()
+        self.show_example_image()
+        self.set_preproc()
+        self.call_splitdata()
+        self.mlp_tt()
+        self.call_pptocnn()
+        
+        self.make_callbacks()
+        self.pre_m2()
+        self.eval_model2()
 
         pass
 
     def run_sequence_model3(self): #cnn layers v1
     
-        ##code
+        self.call_splitdata()
+        self.call_pptocnn()
+        self.make_callbacks()
+        self.get_modelcnn()
+        self.eval_cnn_m1()
 
         pass
 
     def run_sequence_model4(self): #cnn model v2
     
-        ##code
-
+        self.data_aug()
+        self.make_callbacks()
+        self.get_modelcnn_v2()
+        self.eval_cnn_model2()
+        self.final_classification()
+        
         pass
 
+
+#start
 
 if __name__=="__main__":
 
@@ -403,4 +444,4 @@ if __name__=="__main__":
     cfp.run_sequence_model3()
     cfp.run_sequence_model4()
 
-    
+#end
