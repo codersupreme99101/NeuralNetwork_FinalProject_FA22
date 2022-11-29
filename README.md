@@ -7,6 +7,8 @@ Dataset used and generated models so far (access granted Microsoft Onedrive Link
 
 Files from the link should be downloaded and unpacked into the appropriate folder ("final_project"), as the 2 main directories inside ("EE 456") on the onedrive link (as "inputs" and "models")
 
+Refer to the proposal file for the project proposal, and the report file for the dicussion and analysis of all the code and the theory of the DCNN and CNN. 
+
 The dataset is borrowed open-source from Chinese National Hospital in Guangzhou. 
 
 (C) Arya Keni and Sung Chang, EE 456, EECS Dept. Penn State Main Campus, FA22
