@@ -7,4 +7,6 @@ Dataset used and generated models so far (access granted Microsoft Onedrive Link
 
 Files from the link should be downloaded and unpacked into the appropriate folder ("final_project"), as the 2 main directories inside ("EE 456") on the onedrive link (as "inputs" and "models")
 
+The dataset is borrowed open-source from Chinese National Hospital in Guangzhou. 
+
 (C) Arya Keni and Sung Chang, EE 456, EECS Dept. Penn State Main Campus, FA22
