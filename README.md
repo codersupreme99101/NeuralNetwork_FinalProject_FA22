@@ -11,4 +11,6 @@ Refer to the proposal file for the project proposal, and the report file for the
 
 The dataset is borrowed open-source from Chinese National Hospital in Guangzhou. 
 
+The "final_project" folder contains the main results categorized as per the report, and the code for all the NNs as well.
+
 (C) Arya Keni and Sung Chang, EE 456, EECS Dept. Penn State Main Campus, FA22
